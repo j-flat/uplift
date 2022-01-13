@@ -179,7 +179,9 @@ uplift release --check
 
 ## Configuration
 
-Uplift can be configured through the existence of an optional `.uplift.yml` configuration file in the root of your repository. Other supported variations are: `.uplift.yaml`, `uplift.yml` and `uplift.yaml`.
+Uplift can be configured through the existence of an optional `.uplift.yml` configuration file, that can be either in the root of your repository or optionally in `.config`-folder.
+
+Other supported variations are: `.uplift.yaml`, `uplift.yml` and `uplift.yaml`, when using one of these variations they can also be accessed from `.config`-folder..
 
 ```yaml
 # An initial version that will be used for the first tag in your repository.

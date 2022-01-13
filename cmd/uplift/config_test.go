@@ -24,6 +24,7 @@ package main
 
 import (
 	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/gembaadvantage/uplift/internal/git"
@@ -56,7 +57,48 @@ func TestLoadConfig(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			git.MkTmpDir(t)
-			upliftConfigFile(t, tt.filename)
+			upliftConfigFile(t, tt.filename, "./")
+
+			cfg, err := loadConfig()
+
+			require.NoError(t, err)
+			require.Equal(t, "1.0.0", cfg.FirstVersion)
+		})
+	}
+}
+
+func TestLoadConfigFromDirectory(t *testing.T) {
+	tests := []struct {
+		name     string
+		filename string
+		folder   string
+	}{
+		{
+			name:     ".config/DotUpliftYml",
+			filename: ".uplift.yml",
+			folder:   ".config",
+		},
+		{
+			name:     ".config/DotUpliftYaml",
+			filename: ".uplift.yaml",
+			folder:   ".config",
+		},
+		{
+			name:     ".config/UpliftYml",
+			filename: "uplift.yml",
+			folder:   ".config",
+		},
+		{
+			name:     ".config/UpliftYaml",
+			filename: "uplift.yaml",
+			folder:   ".config",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			git.MkTmpDir(t)
+			os.Mkdir(tt.folder, 0777)
+			upliftConfigFile(t, tt.filename, tt.folder)
 
 			cfg, err := loadConfig()
 
