@@ -23,25 +23,29 @@ SOFTWARE.
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/gembaadvantage/uplift/internal/config"
 )
 
 var (
-	files = [4]string{".uplift.yml", ".uplift.yaml", "uplift.yml", "uplift.yaml"}
+	folders = [2]string{"./", ".config"}
+	files   = [4]string{".uplift.yml", ".uplift.yaml", "uplift.yml", "uplift.yaml"}
 )
 
 func loadConfig() (config.Uplift, error) {
 	for _, file := range files {
-		cfg, err := config.Load(file)
+		for _, folder := range folders {
+			cfg, err := config.Load(fmt.Sprintf("%s/%s", folder, file))
+			// If the file doesn't exist, try another, until the array is exhausted
+			if err != nil && os.IsNotExist(err) {
+				continue
+			}
 
-		// If the file doesn't exist, try another, until the array is exhausted
-		if err != nil && os.IsNotExist(err) {
-			continue
+			return cfg, err
 		}
 
-		return cfg, err
 	}
 
 	return config.Uplift{}, nil

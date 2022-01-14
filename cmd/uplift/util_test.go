@@ -23,6 +23,7 @@ SOFTWARE.
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"testing"
 
@@ -54,11 +55,13 @@ func tagRepoWith(t *testing.T, tags []string) {
 	}
 }
 
-func upliftConfigFile(t *testing.T, name string) {
+func upliftConfigFile(t *testing.T, name, folder string) {
 	t.Helper()
 
 	yml := "firstVersion: 1.0.0"
 
-	err := ioutil.WriteFile(name, []byte(yml), 0644)
+	path := fmt.Sprintf("%s/%s", folder, name)
+
+	err := ioutil.WriteFile(path, []byte(yml), 0644)
 	require.NoError(t, err)
 }
